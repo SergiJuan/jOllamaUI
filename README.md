@@ -9,10 +9,15 @@ A simple Java desktop chat client for interacting with Ollama and local LLMs.
 ![GitHub forks](https://img.shields.io/github/forks/SergiJuan/jOllamaUI)
 ![Contributors](https://img.shields.io/github/contributors/SergiJuan/jOllamaUI?style=social)
 
-![Java](https://img.shields.io/badge/Java-11+-orange)
+![Java](https://img.shields.io/badge/Java-17+-orange)
 ![GitHub last commit](https://img.shields.io/github/last-commit/SergiJuan/jOllamaUI?color=green)
 ![GitHub License](https://img.shields.io/github/license/SergiJuan/jOllamaUI)
 
 </div>
 
 ---
+
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/SergiJuan/jOllamaUI/main/jollamaui-showcase.png" alt="jOllamaUI logo">
+</div>
