@@ -19,5 +19,10 @@ A simple Java desktop chat client for interacting with Ollama and local LLMs.
 
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/SergiJuan/jOllamaUI/main/jollamaui-showcase.png" alt="jOllamaUI logo">
+  <img src="https://raw.githubusercontent.com/SergiJuan/jOllamaUI/main/jollamaui-showcase.png" alt="jOllamaUI showcase">
+</div>
+
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/SergiJuan/jOllamaUI/main/jollamaui-showcase2.png" alt="jOllamaUI showcase">
 </div>
