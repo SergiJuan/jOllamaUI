@@ -1,22 +1,21 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/SergiJuan/jOllamaUI/main/jollamaui-logo.png" width="200" alt="jOllamaUI logo">
+  <img src="https://raw.githubusercontent.com/SergiJuan/jOllamaUI/main/jollamaui-logo.png" width="180" alt="jOllamaUI Logo">
 
-# jOllamaUI — Ollama Client UI
+  <h1>jOllamaUI</h1>
+  <p><strong>A modern, lightweight web interface for Ollama</strong></p>
 
-A simple Java desktop chat client for interacting with Ollama and local LLMs.
+  <p>
+    <a href="https://github.com/SergiJuan/jOllamaUI/stargazers"><img src="https://img.shields.io/github/stars/SergiJuan/jOllamaUI?style=flat-square&color=yellow" alt="Stars"></a>
+    <a href="https://github.com/SergiJuan/jOllamaUI/network/members"><img src="https://img.shields.io/github/forks/SergiJuan/jOllamaUI?style=flat-square&color=blue" alt="Forks"></a>
+    <a href="https://github.com/SergiJuan/jOllamaUI/blob/main/LICENSE"><img src="https://img.shields.io/github/license/SergiJuan/jOllamaUI?style=flat-square&color=green" alt="License"></a>
+  </p>
 
-![GitHub stars](https://img.shields.io/github/stars/SergiJuan/jOllamaUI)
-![GitHub forks](https://img.shields.io/github/forks/SergiJuan/jOllamaUI)
-![Contributors](https://img.shields.io/github/contributors/SergiJuan/jOllamaUI?style=social)
-
-![Java](https://img.shields.io/badge/Java-17+-orange)
-![GitHub last commit](https://img.shields.io/github/last-commit/SergiJuan/jOllamaUI?color=green)
-![GitHub License](https://img.shields.io/github/license/SergiJuan/jOllamaUI)
-
+  <p>
+    <img src="https://img.shields.io/badge/Java-17+-orange?style=flat-square&logo=openjdk" alt="Java 17+">
+    <img src="https://img.shields.io/badge/Maven-3.x-red?style=flat-square&logo=apachemaven" alt="Maven">
+    <img src="https://img.shields.io/badge/Ollama-Compatible-purple?style=flat-square" alt="Ollama">
+  </p>
 </div>
-
----
-
 
 ---
 
@@ -108,6 +107,16 @@ jOllamaUI/
         └── app.js                 # Frontend application
 ```
 
+## API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/` | GET | Serves the web interface |
+| `/api/models` | GET | List installed models |
+| `/api/models/{name}` | DELETE | Delete a model |
+| `/api/pull` | POST | Download a new model |
+| `/api/chat` | POST | Send a chat message (SSE streaming) |
+| `/api/settings` | POST | Update Ollama host configuration |
 
 ## Technologies
 
@@ -115,8 +124,8 @@ jOllamaUI/
 - **Frontend**: Vanilla JavaScript, CSS3, HTML5
 - **Build Tool**: Maven
 - **Dependencies**:
-    - [jOllama](https://github.com/SergiJuan/jOllama) — Java client for Ollama
-    - [Gson](https://github.com/google/gson) — JSON serialization
+  - [jOllama](https://github.com/SergiJuan/jOllama) — Java client for Ollama
+  - [Gson](https://github.com/google/gson) — JSON serialization
 
 ## Contributing
 
@@ -139,3 +148,8 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 - Thanks to the Ollama team for making local LLMs accessible
 
 ---
+
+<div align="center">
+  <p><strong>⭐ Star this repo if you find it useful!</strong></p>
+  <p>Made with ❤️ by <a href="https://github.com/SergiJuan">SergiJuan</a></p>
+</div>
