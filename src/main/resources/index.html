@@ -1,773 +1,171 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>jOllama UI</title>
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
     <link rel="icon" href="https://raw.githubusercontent.com/SergiJuan/jOllamaUI/main/jollamaui-logo.png" type="image/x-icon">
-    <style>
-        :root {
-            --bg:         #ffffff;
-            --surface:    #fafafa;
-            --border:     #e5e5e5;
-            --border-hi:  #d4d4d4;
-            --text:       #171717;
-            --muted:      #737373;
-            --subtle:     #a3a3a3;
-            --accent:     #8b56f4;
-            --accent-lt:  #f3eefe;
-            --accent-mid: #9a7cd6;
-            --accent-dk:  #7340e0;
-            --danger:     #ef4444;
-            --sans:       'Geist', system-ui, sans-serif;
-            --mono:       'Geist Mono', monospace;
-        }
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { height: 100%; overflow: hidden; }
-        body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; display: flex; }
-
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 99px; }
-
-        /* ── Sidebar ── */
-        aside {
-            width: 240px;
-            min-width: 240px;
-            background: var(--surface);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .logo {
-            padding: 20px 18px 16px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-
-        nav { flex: 1; padding: 10px 10px; display: flex; flex-direction: column; gap: 1px; }
-        .nav-btn {
-            all: unset;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            padding: 8px 10px;
-            border-radius: 8px;
-            color: var(--muted);
-            font-size: 13.5px;
-            font-weight: 400;
-            transition: background 0.12s, color 0.12s;
-        }
-        .nav-btn:hover { background: var(--border); color: var(--text); }
-        .nav-btn.active { background: var(--accent-lt); color: var(--accent); font-weight: 500; }
-        .nav-btn svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.7; }
-        .nav-btn.active svg { opacity: 1; }
-
-        .sidebar-footer {
-            padding: 12px 18px;
-            border-top: 1px solid var(--border);
-        }
-        .conn-row { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--subtle); }
-        .conn-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border-hi); flex-shrink: 0; transition: background 0.3s; }
-        .conn-dot.ok  { background: #22c55e; }
-        .conn-dot.err { background: var(--danger); }
-
-        /* ── Main ── */
-        main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--bg); }
-        .view { display: none; flex: 1; flex-direction: column; overflow: hidden; }
-        .view.active { display: flex; }
-
-        .page-header {
-            padding: 14px 24px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-shrink: 0;
-            background: var(--bg);
-        }
-        .page-title { font-size: 13px; font-weight: 500; color: var(--text); }
-
-        /* ── Buttons ── */
-        .btn {
-            all: unset;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.12s;
-            white-space: nowrap;
-        }
-        .btn-primary { background: var(--accent); color: #fff; }
-        .btn-primary:hover { background: var(--accent-dk); }
-        .btn-primary:disabled { background: var(--border-hi); color: var(--subtle); cursor: not-allowed; }
-        .btn-ghost { background: transparent; border: 1px solid var(--border-hi); color: var(--muted); font-size: 12.5px; }
-        .btn-ghost:hover { background: var(--surface); color: var(--text); border-color: var(--border-hi); }
-        .btn-danger { background: transparent; border: 1px solid transparent; color: var(--subtle); font-size: 12.5px; }
-        .btn-danger:not(:disabled):hover { border-color: #fca5a5; color: var(--danger); background: #fff5f5; }
-        .btn-danger:disabled { cursor: not-allowed; opacity: 0.35; }
-
-        select {
-            appearance: none;
-            background: var(--surface);
-            border: 1px solid var(--border-hi);
-            color: var(--text);
-            font-family: var(--sans);
-            font-size: 12.5px;
-            padding: 6px 30px 6px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23a3a3a3'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            outline: none;
-            transition: border-color 0.15s;
-            font-weight: 400;
-        }
-        select:focus { border-color: var(--accent); }
-
-        /* ── Chat ── */
-        #chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 24px 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-
-        .msg-row {
-            display: flex;
-            align-items: flex-end;
-            gap: 8px;
-            animation: fadeUp 0.15s ease;
-        }
-        .msg-row.user      { flex-direction: row-reverse; align-self: flex-end; }
-        .msg-row.assistant { align-self: flex-start; }
-        .msg-row.error     { align-self: flex-start; }
-
-        .msg-avatar {
-            width: 26px; height: 26px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            font-weight: 500;
-        }
-        .msg-row.user .msg-avatar      { background: var(--accent-lt); color: var(--accent); }
-        .msg-row.assistant .msg-avatar { background: #efefef; color: var(--muted); }
-        .msg-row.error .msg-avatar     { background: #fff0f0; color: var(--danger); }
-
-        .msg-bubble {
-            padding: 10px 14px;
-            font-size: 14px;
-            line-height: 1.65;
-            white-space: pre-wrap;
-            word-break: break-word;
-            max-width: min(520px, 70vw);
-            width: fit-content;
-            border-radius: 16px;
-        }
-        .msg-row.user .msg-bubble {
-            background: var(--accent);
-            color: #fff;
-            border-bottom-right-radius: 4px;
-        }
-        .msg-row.assistant .msg-bubble {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            color: var(--text);
-            border-bottom-left-radius: 4px;
-        }
-        .msg-row.error .msg-bubble {
-            background: #fff5f5;
-            border: 1px solid #fecaca;
-            color: var(--danger);
-            font-size: 13px;
-            border-bottom-left-radius: 4px;
-        }
-
-        .typing-dots { display: flex; gap: 4px; padding: 6px 2px; }
-        .typing-dots span { width: 6px; height: 6px; background: var(--border-hi); border-radius: 50%; animation: bounce 1.3s infinite; }
-        .typing-dots span:nth-child(2) { animation-delay: 0.18s; }
-        .typing-dots span:nth-child(3) { animation-delay: 0.36s; }
-        @keyframes bounce { 0%,70%,100% { transform: translateY(0); opacity: 0.5; } 35% { transform: translateY(-4px); opacity: 1; } }
-
-        /* Input area */
-        .chat-input-area {
-            border-top: 1px solid var(--border);
-            padding: 14px 24px 16px;
-            flex-shrink: 0;
-            background: var(--bg);
-        }
-        .chat-input-box {
-            max-width: 720px;
-            margin: 0 auto;
-            border: 1px solid var(--border-hi);
-            border-radius: 12px;
-            background: var(--bg);
-            display: flex;
-            align-items: flex-end;
-            gap: 0;
-            transition: border-color 0.15s, box-shadow 0.15s;
-        }
-        .chat-input-box:focus-within {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(139,86,244,0.08);
-        }
-        .thinking-block {
-            font-size: 12px;
-            color: var(--muted);
-            font-family: var(--mono);
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            margin-bottom: 6px;
-            overflow: hidden;
-            max-width: min(520px, 70vw);
-        }
-        .thinking-header {
-            padding: 6px 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            user-select: none;
-            font-size: 11px;
-            color: var(--subtle);
-        }
-        .thinking-header:hover { color: var(--muted); }
-        .thinking-header .arrow { transition: transform 0.2s; font-size: 9px; }
-        .thinking-header.open .arrow { transform: rotate(90deg); }
-        .thinking-body {
-            display: none;
-            padding: 8px 10px;
-            white-space: pre-wrap;
-            word-break: break-word;
-            border-top: 1px solid var(--border);
-            line-height: 1.6;
-        }
-        .thinking-body.open { display: block; }
-        textarea {
-            all: unset;
-            flex: 1;
-            padding: 11px 14px;
-            font-family: var(--sans);
-            font-size: 14px;
-            color: var(--text);
-            resize: none;
-            max-height: 160px;
-            overflow-y: auto;
-            line-height: 1.55;
-        }
-        textarea::placeholder { color: var(--subtle); }
-        .send-btn-wrap { padding: 7px 8px; }
-        #send-button {
-            all: unset;
-            cursor: pointer;
-            width: 32px; height: 32px;
-            background: var(--accent);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.12s;
-            flex-shrink: 0;
-        }
-        #send-button:hover { background: var(--accent-dk); }
-        #send-button:disabled { background: var(--border); cursor: not-allowed; }
-        #send-button svg { width: 15px; height: 15px; fill: #fff; }
-        .chat-status { text-align: center; font-size: 11.5px; color: var(--subtle); margin-top: 7px; min-height: 16px; }
-
-        /* ── Models ── */
-        #view-models { padding: 0; }
-        .models-body { flex: 1; overflow-y: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        thead th {
-            text-align: left;
-            padding: 10px 20px;
-            font-size: 11.5px;
-            font-weight: 500;
-            color: var(--subtle);
-            border-bottom: 1px solid var(--border);
-            background: var(--surface);
-            letter-spacing: 0.02em;
-        }
-        thead th:last-child { text-align: right; }
-        tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
-        tbody tr:hover { background: var(--surface); }
-        tbody td { padding: 13px 20px; color: var(--text); vertical-align: middle; }
-        tbody td:first-child { font-family: var(--mono); font-size: 12.5px; font-weight: 400; }
-        tbody td.muted { color: var(--muted); font-size: 12.5px; }
-        tbody td:last-child { text-align: right; }
-        input[type="radio"] { accent-color: var(--accent); width: 14px; height: 14px; cursor: pointer; }
-
-        .models-pull-bar {
-            border-top: 1px solid var(--border);
-            padding: 16px 20px;
-            flex-shrink: 0;
-            background: var(--surface);
-            display: flex;
-            align-items: flex-end;
-            gap: 10px;
-        }
-        .pull-field { flex: 1; }
-        .pull-label { display: block; font-size: 11px; font-weight: 500; color: var(--subtle); margin-bottom: 5px; letter-spacing: 0.02em; }
-        .pull-input {
-            all: unset;
-            width: 100%;
-            background: var(--bg);
-            border: 1px solid var(--border-hi);
-            border-radius: 8px;
-            padding: 7px 12px;
-            font-family: var(--mono);
-            font-size: 12.5px;
-            color: var(--text);
-            transition: border-color 0.15s;
-        }
-        .pull-input::placeholder { color: var(--subtle); }
-        .pull-input:focus { outline: none; border-color: var(--accent); }
-        .models-status-bar {
-            font-size: 11.5px;
-            color: var(--subtle);
-            padding: 7px 20px;
-            border-top: 1px solid var(--border);
-            min-height: 32px;
-            flex-shrink: 0;
-            background: var(--bg);
-        }
-
-        /* ── Settings ── */
-        #view-settings { overflow-y: auto; }
-        .settings-inner { padding: 32px; max-width: 500px; }
-        .settings-label { display: block; font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
-        .settings-input {
-            all: unset;
-            width: 100%;
-            background: var(--surface);
-            border: 1px solid var(--border-hi);
-            border-radius: 8px;
-            padding: 9px 13px;
-            font-family: var(--mono);
-            font-size: 13px;
-            color: var(--text);
-            transition: border-color 0.15s;
-        }
-        .settings-input:focus { outline: none; border-color: var(--accent); }
-        .settings-hint { font-size: 11.5px; color: var(--subtle); margin-top: 5px; }
-        .settings-divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
-        .settings-footer { display: flex; align-items: center; gap: 14px; }
-        #settings-status { font-size: 12px; color: var(--subtle); }
-
-        /* ── Spinner ── */
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .spinner { display: inline-block; width: 10px; height: 10px; border: 1.5px solid currentColor; border-top-color: transparent; border-radius: 50%; animation: spin 0.7s linear infinite; opacity: 0.6; margin-right: 4px; }
-    </style>
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-
-<aside>
-    <div class="logo">
-        <img src="https://raw.githubusercontent.com/SergiJuan/jOllamaUI/main/jollamaui-logo.png" alt="jOllama" style="height:32px; width:auto;">
-        <p>jOllama UI</p>
-    </div>
-
-    <nav>
-        <button id="nav-chat" class="nav-btn active">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-            </svg>
-            Chat
-        </button>
-        <button id="nav-models" class="nav-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
-            </svg>
-            Models
-        </button>
-        <button id="nav-settings" class="nav-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-            </svg>
-            Settings
-        </button>
-    </nav>
-
-    <div class="sidebar-footer">
-        <div class="conn-row">
-            <div class="conn-dot" id="conn-dot"></div>
-            <span id="conn-label">checking…</span>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <!-- Logo -->
+        <div class="logo">
+            <img src="https://raw.githubusercontent.com/SergiJuan/jOllamaUI/main/jollamaui-logo.png" alt="jOllama">
+            <span class="logo-text">jOllama UI</span>
         </div>
-    </div>
-</aside>
 
-<main>
+        <!-- Navigation Menu -->
+        <nav class="nav-menu">
+            <!-- Chat Button -->
+            <button id="nav-chat" class="nav-btn active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                Chat
+            </button>
 
-    <!-- CHAT -->
-    <div id="view-chat" class="view active">
-        <div class="page-header">
-            <span class="page-title">New conversation</span>
-            <div style="display:flex;gap:8px;align-items:center;">
-                <select id="model-selector-chat"><option value="">Loading…</option></select>
-                <button id="clear-chat" class="btn btn-ghost">Clear</button>
+            <!-- Models Button -->
+            <button id="nav-models" class="nav-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2"/>
+                    <path d="M8 21h8M12 17v4"/>
+                </svg>
+                Models
+            </button>
+
+            <!-- Settings Button -->
+            <button id="nav-settings" class="nav-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                </svg>
+                Settings
+            </button>
+        </nav>
+
+        <!-- Connection Status -->
+        <div class="sidebar-footer">
+            <div class="conn-status">
+                <div class="conn-dot" id="conn-dot"></div>
+                <span id="conn-label">checking…</span>
             </div>
         </div>
+    </aside>
 
-        <div id="chat-messages">
-            <div class="msg-row assistant">
-                <div class="msg-avatar">AI</div>
-                <div class="msg-bubble">Select a model above and start typing.</div>
-            </div>
-        </div>
+    <!-- Main Content Area -->
+    <main class="main-content">
 
-        <div class="chat-input-area">
-            <div class="chat-input-box">
-                <textarea id="chat-input" rows="1" placeholder="Write a message…"></textarea>
-                <div class="send-btn-wrap">
-                    <button id="send-button">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                        </svg>
-                    </button>
+        <!-- Chat View -->
+        <div id="view-chat" class="view active">
+            <!-- Header -->
+            <div class="page-header">
+                <span class="page-title">New conversation</span>
+                <div class="flex flex-center gap-sm">
+                    <select id="model-selector-chat">
+                        <option value="">Loading…</option>
+                    </select>
+                    <button id="clear-chat" class="btn btn-ghost">Clear</button>
                 </div>
             </div>
-            <p class="chat-status" id="chat-status"></p>
-        </div>
-    </div>
 
-    <!-- MODELOS -->
-    <div id="view-models" class="view">
-        <div class="page-header">
-            <span class="page-title">Installed models</span>
-            <button id="refresh-models" class="btn btn-ghost">↻ Refresh</button>
-        </div>
-        <div class="models-body">
-            <table>
-                <thead><tr>
-                    <th>Name</th><th>Size</th><th>Modified</th><th>Sel.</th>
-                </tr></thead>
-                <tbody id="models-table-body"></tbody>
-            </table>
-        </div>
-        <div class="models-pull-bar">
-            <div class="pull-field">
-                <label class="pull-label">DOWNLOAD MODEL</label>
-                <input id="pull-model-input" class="pull-input" type="text" placeholder="llama3, mistral, codellama…">
+            <!-- Messages Area -->
+            <div id="chat-messages" class="chat-messages">
+                <div class="message-row assistant">
+                    <div class="message-avatar">AI</div>
+                    <div class="message-bubble">Select a model above and start typing.</div>
+                </div>
             </div>
-            <button id="pull-model-btn" class="btn btn-primary">↓ Pull</button>
-            <button id="delete-model-btn" class="btn btn-danger" disabled>✕ Delete</button>
-        </div>
-        <div class="models-status-bar" id="models-status"></div>
-    </div>
 
-    <!-- AJUSTES -->
-    <div id="view-settings" class="view">
-        <div class="page-header"><span class="page-title">Settings</span></div>
-        <div class="settings-inner">
-            <div style="margin-bottom:20px;">
-                <label class="settings-label">OLLAMA HOST</label>
-                <input id="settings-host" class="settings-input" type="text" value="http://localhost:11434">
-                <p class="settings-hint">Clients are reinitialized on save.</p>
-            </div>
-            <hr class="settings-divider">
-            <div class="settings-footer">
-                <button id="save-settings" class="btn btn-primary">Save</button>
-                <span id="settings-status"></span>
-            </div>
-        </div>
-    </div>
-
-</main>
-
-<script>
-    (function () {
-
-        function showView(name) {
-            ['chat','models','settings'].forEach(k => {
-                document.getElementById('view-' + k).classList.toggle('active', k === name);
-                document.getElementById('nav-'  + k).classList.toggle('active', k === name);
-            });
-            if (name === 'models') loadModels();
-        }
-        ['chat','models','settings'].forEach(k =>
-            document.getElementById('nav-' + k).addEventListener('click', () => showView(k))
-        );
-
-        const dot = document.getElementById('conn-dot');
-        const lbl = document.getElementById('conn-label');
-        async function checkConn() {
-            try {
-                const r = await fetch('/api/models');
-                dot.className = r.ok ? 'conn-dot ok' : 'conn-dot err';
-                lbl.textContent = r.ok ? 'Connected' : 'Error';
-            } catch {
-                dot.className = 'conn-dot err';
-                lbl.textContent = 'No connection';
-            }
-        }
-
-        const chatEl  = document.getElementById('chat-messages');
-        const inputEl = document.getElementById('chat-input');
-        const sendBtn = document.getElementById('send-button');
-        const stEl    = document.getElementById('chat-status');
-        const modelSel= document.getElementById('model-selector-chat');
-        let history   = [];
-
-        function esc(s) {
-            return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-        }
-
-        function addMsg(role, text) {
-            const row = document.createElement('div');
-            row.className = 'msg-row ' + role;
-            const avatarMap = { user: 'You', assistant: 'AI', error: '!' };
-            const nameMap = { user: 'You', assistant: 'jOllama', error: 'Error' };
-            row.innerHTML = `
-            <div class="msg-avatar">${avatarMap[role] || '?'}</div>
-            <div class="msg-bubble">${esc(text)}</div>`;
-            chatEl.appendChild(row);
-            chatEl.scrollTop = chatEl.scrollHeight;
-        }
-
-        function showTyping() {
-            const row = document.createElement('div');
-            row.id = 'typing-row';
-            row.className = 'msg-row assistant';
-            row.innerHTML = `
-            <div class="msg-avatar">AI</div>
-            <div class="msg-bubble" style="padding:10px 14px; width:fit-content;">
-                <div class="typing-dots"><span></span><span></span><span></span></div>
-            </div>`;
-            chatEl.appendChild(row);
-            chatEl.scrollTop = chatEl.scrollHeight;
-        }
-        function removeTyping() { document.getElementById('typing-row')?.remove(); }
-
-        async function sendMessage() {
-            const text  = inputEl.value.trim();
-            const model = modelSel.value;
-            if (!text || !model) return;
-
-            addMsg('user', text);
-            history.push({ role: 'user', content: text });
-            inputEl.value = '';
-            inputEl.style.height = 'auto';
-            sendBtn.disabled = true;
-            stEl.innerHTML = `<span class="spinner"></span>Waiting for response…`;
-            showTyping();
-
-            try {
-                const res = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ model, history }),
-                });
-
-                if (!res.ok) {
-                    removeTyping();
-                    const e = await res.json().catch(() => ({}));
-                    addMsg('error', e.error || res.statusText);
-                    return;
-                }
-
-                removeTyping();
-
-                // Fila del asistente con thinking (oculto) + burbuja de respuesta
-                const row = document.createElement('div');
-                row.className = 'msg-row assistant';
-                row.innerHTML = `
-            <div class="msg-avatar">AI</div>
-            <div style="display:flex;flex-direction:column;gap:4px;max-width:min(520px,70vw)">
-                <div class="thinking-block" style="display:none">
-                    <div class="thinking-header">
-                        <span class="arrow">▶</span>
-                        <span>Thinking</span>
+            <!-- Input Area -->
+            <div class="chat-input-area">
+                <div class="chat-input-box">
+                    <textarea id="chat-input" rows="1" placeholder="Write a message…"></textarea>
+                    <div class="send-btn-wrap">
+                        <button id="send-button" class="send-button">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                            </svg>
+                        </button>
                     </div>
-                    <div class="thinking-body"></div>
                 </div>
-                <div class="msg-bubble"></div>
-            </div>`;
-                chatEl.appendChild(row);
+                <p class="chat-status" id="chat-status"></p>
+            </div>
+        </div>
 
-                const thinkBlock  = row.querySelector('.thinking-block');
-                const thinkBody   = row.querySelector('.thinking-body');
-                const thinkHeader = row.querySelector('.thinking-header');
-                const bubble      = row.querySelector('.msg-bubble');
+        <!-- Models View -->
+        <div id="view-models" class="view models-view">
+            <!-- Header -->
+            <div class="page-header">
+                <span class="page-title">Installed models</span>
+                <button id="refresh-models" class="btn btn-ghost">↻ Refresh</button>
+            </div>
 
-                // Toggle thinking al hacer click
-                thinkHeader.addEventListener('click', () => {
-                    thinkHeader.classList.toggle('open');
-                    thinkBody.classList.toggle('open');
-                });
+            <!-- Models Table -->
+            <div class="models-body">
+                <table class="models-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Size</th>
+                            <th>Modified</th>
+                            <th>Sel.</th>
+                        </tr>
+                    </thead>
+                    <tbody id="models-table-body"></tbody>
+                </table>
+            </div>
 
-                let fullReply   = '';
-                let fullThink   = '';
-                const reader    = res.body.getReader();
-                const decoder   = new TextDecoder();
-                let buffer      = '';
+            <!-- Pull Model Bar -->
+            <div class="models-pull-bar">
+                <div class="pull-field">
+                    <label class="pull-label">DOWNLOAD MODEL</label>
+                    <input id="pull-model-input" class="pull-input" type="text" placeholder="llama3, mistral, codellama…">
+                </div>
+                <button id="pull-model-btn" class="btn btn-primary">↓ Pull</button>
+                <button id="delete-model-btn" class="btn btn-danger" disabled>✕ Delete</button>
+            </div>
 
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
+            <!-- Status Bar -->
+            <div class="models-status-bar" id="models-status"></div>
+        </div>
 
-                    buffer += decoder.decode(value, { stream: true });
-                    const lines = buffer.split('\n');
-                    buffer = lines.pop();
+        <!-- Settings View -->
+        <div id="view-settings" class="view settings-view">
+            <!-- Header -->
+            <div class="page-header">
+                <span class="page-title">Settings</span>
+            </div>
 
-                    for (const line of lines) {
-                        if (!line.startsWith('data: ')) continue;
-                        const raw = line.slice(6);
-                        if (raw === '[DONE]') break;
+            <!-- Settings Form -->
+            <div class="settings-inner">
+                <div style="margin-bottom: 20px;">
+                    <label class="settings-label">OLLAMA HOST</label>
+                    <input id="settings-host" class="settings-input" type="url" value="http://localhost:11434">
+                    <p class="settings-hint">Clients are reinitialized on save.</p>
+                </div>
 
-                        if (raw.startsWith('[THINK]')) {
-                            // Token de thinking
-                            fullThink += raw.slice(7).replace(/\\n/g, '\n');
-                            thinkBlock.style.display = 'block';
-                            thinkBody.textContent = fullThink;
-                        } else {
-                            // Token de respuesta normal
-                            fullReply += raw.replace(/\\n/g, '\n');
-                            bubble.textContent = fullReply;
-                        }
-                        chatEl.scrollTop = chatEl.scrollHeight;
-                    }
-                }
+                <hr class="settings-divider">
 
-                history.push({ role: 'assistant', content: fullReply });
+                <div class="settings-footer">
+                    <button id="save-settings" class="btn btn-primary">Save</button>
+                    <span id="settings-status" class="settings-status"></span>
+                </div>
+            </div>
+        </div>
 
-            } catch (err) {
-                removeTyping();
-                addMsg('error', 'No connection con el servidor.');
-            } finally {
-                sendBtn.disabled = false;
-                stEl.textContent = '';
-            }
-        }
+    </main>
 
-        sendBtn.addEventListener('click', sendMessage);
-        inputEl.addEventListener('keydown', e => {
-            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-        });
-        inputEl.addEventListener('input', function () {
-            this.style.height = 'auto';
-            this.style.height = Math.min(this.scrollHeight, 160) + 'px';
-        });
-        document.getElementById('clear-chat').addEventListener('click', () => {
-            chatEl.innerHTML = '';
-            history = [];
-            addMsg('assistant', 'History cleared. Start a new conversation.');
-        });
-
-        const tbody   = document.getElementById('models-table-body');
-        const mSt     = document.getElementById('models-status');
-        const pullInp = document.getElementById('pull-model-input');
-        const pullBtn = document.getElementById('pull-model-btn');
-        const delBtn  = document.getElementById('delete-model-btn');
-
-        function fmtBytes(b) {
-            if (!b) return '—';
-            return b >= 1e9 ? (b / 1e9).toFixed(1) + ' GB' : (b / 1e6).toFixed(1) + ' MB';
-        }
-
-        async function loadModels() {
-            mSt.textContent = 'Loading…';
-            tbody.innerHTML = '';
-            try {
-                const res  = await fetch('/api/models');
-                const list = await res.json();
-                if (!Array.isArray(list) || list.length === 0) {
-                    mSt.textContent = 'No models installed.';
-                    modelSel.innerHTML = '<option value="">No models</option>';
-                    return;
-                }
-                list.forEach(m => {
-                    const tr  = document.createElement('tr');
-                    const mod = m.modifiedAt ? m.modifiedAt.slice(0, 10) : '—';
-                    const sz  = m.formattedSize || fmtBytes(m.size);
-                    tr.innerHTML = `<td>${m.name}</td><td class="muted">${sz}</td><td class="muted">${mod}</td>
-                    <td><input type="radio" name="selModel" value="${m.name}"></td>`;
-                    tbody.appendChild(tr);
-                });
-                mSt.textContent = `${list.length} model(s) available`;
-                modelSel.innerHTML = list.map(m =>
-                    `<option value="${m.name}">${m.name}</option>`).join('');
-                document.querySelectorAll('input[name="selModel"]').forEach(r =>
-                    r.addEventListener('change', () => { delBtn.disabled = false; })
-                );
-            } catch (e) { mSt.textContent = 'Error: ' + e.message; }
-        }
-
-        document.getElementById('refresh-models').addEventListener('click', loadModels);
-
-        pullBtn.addEventListener('click', async () => {
-            const name = pullInp.value.trim();
-            if (!name) { mSt.textContent = 'Enter a model name.'; return; }
-            pullBtn.disabled = true;
-            mSt.innerHTML = `<span class="spinner"></span>Downloading ${name}… (this may take a while)`;
-            pullInp.value = '';
-            try {
-                const res = await fetch('/api/pull', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ model: name }),
-                });
-                const d = await res.json();
-                mSt.textContent = (res.ok && d.status === 'ok')
-                    ? `✓ "${name}" downloaded successfully.`
-                    : '✗ ' + (d.error || 'Unknown error');
-                if (res.ok && d.status === 'ok') await loadModels();
-            } catch { mSt.textContent = '✗ Network error.'; }
-            finally  { pullBtn.disabled = false; }
-        });
-
-        delBtn.addEventListener('click', async () => {
-            const sel = document.querySelector('input[name="selModel"]:checked');
-            if (!sel) return;
-            const name = sel.value;
-            if (!confirm(`Delete "${name}"? This action cannot be undone.`)) return;
-            mSt.innerHTML = `<span class="spinner"></span>Deleting ${name}…`;
-            delBtn.disabled = true;
-            try {
-                const res = await fetch(`/api/models/${encodeURIComponent(name)}`, { method: 'DELETE' });
-                const d   = await res.json().catch(() => ({}));
-                mSt.textContent = res.ok ? `✓ "${name}" deleted.` : '✗ ' + (d.error || res.statusText);
-                if (res.ok) await loadModels();
-            } catch { mSt.textContent = '✗ Network error.'; }
-        });
-
-        document.getElementById('save-settings').addEventListener('click', async () => {
-            const host = document.getElementById('settings-host').value.trim();
-            const sts  = document.getElementById('settings-status');
-            if (!host) { sts.textContent = 'Host cannot be empty.'; return; }
-            try {
-                const res = await fetch('/api/settings', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ host }),
-                });
-                sts.textContent = res.ok ? '✓ Saved.' : '✗ Error saving.';
-            } catch { sts.textContent = '✗ No connection.'; }
-            setTimeout(() => sts.textContent = '', 4000);
-        });
-
-        checkConn();
-        loadModels();
-
-    })();
-</script>
+    <!-- Application JavaScript -->
+    <script src="/js/app.js"></script>
 </body>
 </html>
