@@ -42,7 +42,7 @@ A simple Java desktop chat client for interacting with Ollama and local LLMs.
 - **Thinking Visualization** — Toggle to see model reasoning steps (for supported models)
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/SergiJuan/jOllamaUI/main/jollamaui-showcase3.png" alt="jOllamaUI Models View" width="90%">
+  <img src="https://raw.githubusercontent.com/SergiJuan/jOllamaUI/main/jollamaui-showcase4.png" alt="jOllamaUI Models View" width="90%">
 </div>
 
 - **Configurable Host** — Connect to local or remote Ollama instances
