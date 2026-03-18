@@ -17,6 +17,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    
+    # --- NUEVO ---
+    permissions:
+      contents: write
 
     steps:
     - uses: actions/checkout@v4
@@ -40,8 +44,8 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         tag_name: latest
-        name: "Build"
-        body: "commit ${{ github.sha }}"
+        name: "Latest Build"
+        body: "Commit ${{ github.sha }}"
         files: target/jOllamaUI.jar
         prerelease: true
       env:
