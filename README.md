@@ -24,24 +24,38 @@ A simple Java desktop chat client for interacting with Ollama and local LLMs.
 
 **jOllamaUI** is a clean, fast, and intuitive web interface for [Ollama](https://ollama.ai) — the popular tool for running large language models locally. Built with Java and modern web technologies, it provides a seamless chat experience with your favorite LLMs without requiring complex setups or external dependencies.
 
+## Features
+
+- **Clean, Modern UI** — Minimalist design with a focus on readability and usability
+
 <div align="center">
   <img src="https://raw.githubusercontent.com/SergiJuan/jOllamaUI/main/jollamaui-showcase.png" alt="jOllamaUI Chat Interface" width="90%">
 </div>
 
-## Features
-
-- **Clean, Modern UI** — Minimalist design with a focus on readability and usability
 - **Real-time Streaming** — See responses generate token-by-token in real-time
 - **Model Management** — Browse, download, and delete models directly from the interface
-- **Conversation History** — Maintains context throughout your chat session
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/SergiJuan/jOllamaUI/main/jollamaui-showcase3.png" alt="jOllamaUI Models View" width="90%">
+</div>
+
 - **Thinking Visualization** — Toggle to see model reasoning steps (for supported models)
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/SergiJuan/jOllamaUI/main/jollamaui-showcase3.png" alt="jOllamaUI Models View" width="90%">
+</div>
+
 - **Configurable Host** — Connect to local or remote Ollama instances
-- **Lightweight** — Single JAR file, no external dependencies required
-- **Cross-Platform** — Works on any system with Java 17+
 
 <div align="center">
   <img src="https://raw.githubusercontent.com/SergiJuan/jOllamaUI/main/jollamaui-showcase2.png" alt="jOllamaUI Models View" width="90%">
 </div>
+
+- **Conversation History** — Maintains context throughout your chat session
+- **Lightweight** — Single JAR file, no external dependencies required
+- **Cross-Platform** — Works on any system with Java 17+
+
+
 
 ## Quick Start
 
